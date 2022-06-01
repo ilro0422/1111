@@ -1,0 +1,153 @@
+From Tokyo Westerns 2017 CTF
+
+https://dowsll.github.io/writeups/tokyowesternctf2017/mysimplecipher
+
+TODO:
+ - Look into python "shelve" to save off paths/states
+ - [DONE] Implement __slots__ in all objects
+  - [DONE] Path
+  - [DONE] Factory
+  - [DONE] State
+  - [DONE] ReturnObject
+  - [DONE] PathGroup
+  - [DONE] Project
+  - [DONE] Int
+  - [DONE] Char
+  - [DONE] ObjectManager
+  - [DONE] BitVec
+  - [DONE] Ctx
+  - [DONE] List
+  - [DONE] String
+  - [DONE] Real
+ - Update any_n_int (and others) to use push/pop if possible. state copy adds a lot of expense.
+  - [DONE] any_n_int
+  - any_n_real
+ - [DONE] Add assert handling
+   - tests
+ - Add string.encode('hex') handling
+   - tests
+ - [DONE] Implement symbolic Char for ord
+   - [DONE] tests
+ - [DONE] Implement __int__ for Int object
+   - [DONE] tests
+ - Add support in resolveObject for ast.NameConstant (True, False, None, others?)
+   - tests
+ - Add support for _ast.BoolOp in Assert (assert True and True)
+   - tests
+ - Check BitVecs to use ULE/UGT/etc if doing compare. It defaults to signed.
+ - [DONE] Change Char bitvec size to 8...
+   - Or really just change char to be a constrained int...
+   - Need to pull all Char sets into the object. I.e.: Externally, only use Char.setTo
+   - Implement logic in Char.setTo to add bound constraints to the solver if we are adding to the solver and don't have those constraints already.
+   - Instantiate Char internally as an Int instead of a BitVec
+   - On getZ3Var method for Char, ensure that the constraints are in the solver. This could end up producing excess constraints, but...
+   - [DONE] Change it to utilize bounded Int instead. I'm not happy about this. It will slow things down. :-(
+ - [DONE] Update Int to handle setTo of Z3 expression
+   - [DONE] Update symbolic ord function to use this
+   - tests
+ - Implement max
+   - tests
+   - doc
+ - [DONE] Create "remove_constraints" method of pyState
+   - Basically it will just create a new solver with any of those constraints not in it
+   - [DONE] doc
+   - [DONE] test
+ - [DONE] Implement chr (fully)
+   - [DONE] tests
+   - [DONE] doc
+ - Update docs
+ - Add options ability. Be able to specify options on proj build
+ - Add option to run simplification passes
+   - t = z3.Tactic('ctx-solver-simplify')
+   - t(z3.And(*s.solver.assertions()))[0] # These would be the new solver assertions. Do on copy?
+ - [DONE] Add static optimization for Char.
+   - [DONE] If we're setting to static, remove the bounds from solver.
+   - Further, check if we're relying on any other variable. If not, fully remove this variable from the solver and store it in pyObjectManager object.
+ - pyObjectManager getVar ends up double creating a new value.
+   - __init__ creates one, then Ctx setitem ends up creating a duplicate of that one... This is wasteful.
+ - [DONE] Add uuid and clone_uuid to other objects
+   - [DONE] Char
+   - [DONE] String
+   - [DONE] BitVec
+   - [DONE] List
+   - [DONE] tests
+ - Create "find_by_uuid" for pyObjectManager to return object with that uuid.
+ - Capture reference counts to the variables. When they get to zero, if the only thing in the solver is Char's bounds, remove it.
+ - [DONE] Recursive copy still ending up in the solver...
+ - [DONE] Remove increment option from getZ3Object
+ - Returning of type None from functions is failing.
+   - tests
+ - [DONE] Update pyState.remove_constraints to check that constraints exist in solver before attempting to remove. Removing is COSTLY!
+ - [DONE] Add is_unconstrained
+   - Int
+   - Char (treat base char constraints as unconstrained)
+   - BitVec
+ - [DONE] Add is_unconstrained handling to setTo of Char. If Char itself is unconstrained and setting to another Char object, then use clone approch
+ - Double check that all functions are using the variables state, rather than their own!!!
+   - Somehow make sure this always happens... If we're not doing it this way, constraints will just disappear on us.
+ - Add bytes ability to setTo of Char
+ - Add compare left var string support (i.e.: assert s[0] == 12).
+   - probably need to add right var for that too
+ - Add ability to resolve a function as an argument. i.e.:
+    def test(x):
+        x()
+    def test2():
+        blerg
+    test(test2)
+ - [DONE] All grabbing of variables from out of function inside function
+    q = 12
+    def test():
+        print(q)
+    test()
+ - for (x,y) in zip(l1, l2) doesn't work.
+ - Implement List.setTo for non-clear.
+ - Implement List.mustBe(another list here. i.e.: [1,2,3,4])
+ - Handle var referenced before assignment.. Right now it will happily set.
+    q = 12
+    def test():
+        q += 4
+    This should end in an error
+ - Why is TempRecursiveCopy adding in equalities to the solver that are not used elsewhere?
+   - It's in IF! I should update that to use setTo...
+    010382tempRecursiveCopy[0]@1 == 1
+    010382tempRecursiveCopy[1]@1 == 0
+    010382tempRecursiveCopy[2]@1 == 0
+    010382tempRecursiveCopy[3]@1 == 0
+    010382tempRecursiveCopy[4]@1 == 0
+    010382tempRecursiveCopy[5]@1 == 0
+    010382tempRecursiveCopy[6]@1 == 1
+    010382tempRecursiveCopy[7]@1 == 1
+    010382tempRecursiveCopy[8]@1 == 0
+    010382tempRecursiveCopy[9]@1 == 0
+    010382tempRecursiveCopy[10]@1 == 0
+    010382tempRecursiveCopy[11]@1 == 0
+    010382tempRecursiveCopy[12]@1 == 1
+    010382tempRecursiveCopy[13]@1 == 0
+    010382tempRecursiveCopy[14]@1 == 1
+    010382tempRecursiveCopy[15]@1 == 1
+    010382tempRecursiveCopy[16]@1 == 0
+
+ - Change how I handle solver tactics. Basically, try not to use them. If I use plain solver, it will have faster responses, better caching, and allow push and pop. Once I wonder off into tatic land, everything slows down, but allows me to get some answers that I couldn't before.
+   - Try pop/push first for extra constraints. Fall back to duplicating the solver if we have tactics and cannot push/pop
+ - [DONE] Change all ObjectManager variables to use weakref.ref for state instead of actual handles.
+   - [Done] BitVec
+   - [DONE] Int
+   - [DONE] Char
+   - [DONE] String
+   - [Done] List
+   - [DONE] Ctx
+ - Review how I'm handling references elsewhere. Likely have other circular imports
+ - [DONE] Change "setState" to simply be "state" setter property
+ - [DONE] Implement search strategies
+  - [DONE] Breadth (default)
+  - [DONE] Depth (for longer programs to help with state explosion)
+  - [DONE] Random
+ - Optimize how I handle Chars...
+  - Calling remove_constraints on a char every time is a HUGE time suck...
+ - Provide mechanism for easy hooking, similar to angr and others
+  - @hook(lineno)
+  - [In progress] proj.hook(lineno)
+ - Save path (both source and ast) into project
+  - Use this to check if the hook location exists
+  - Raise error/warning also if the hooked instruction is not the "pass" statement. Actual hitting of the instruction can be different than expected. Pass helps allieviate this.
+ - Add List.setTo to allow an actual list (not just ObjectManager.List)

@@ -1,0 +1,170 @@
+In [1]: import pySym
+
+In [2]: proj = pySym.Project("./bkpctf_crc_mod.py")
+
+In [3]: pg = proj.factory.path_group()
+
+In [4]: pg.explore()
+resolveObject: Could not resolve object named pyState
+resolveObject: Could not resolve object named pyState
+resolveObject: Could not resolve object named pyState
+
+In [5]: pg
+Out[5]: <PathGroup with 1121 deadended, 2 completed>
+
+In [6]: s = pg.completed[0].state.copy()
+
+In [7]: s
+Out[7]: <pySym.pyState.State at 0x7fb68fb806a0>
+
+In [8]: p1 = s.getVar('p1')
+
+In [9]: p1
+Out[9]: <pySym.pyObjectManager.List.List at 0x7fb68eabee10>
+
+In [10]: p1.length()
+Out[10]: 64
+
+In [11]: target = [1, 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 1, 0,
+    ...: 0, 0, 0, 1, 1, 0]
+
+In [12]: for i in range(64):
+    ...:     p1[i].setTo(target[i])
+    ...:
+
+In [13]: s.solver
+Out[13]:
+[1BinOpTemp@20 == 0temp@1 ^ 0,
+ 2BinOpTemp@20 == 0temp@1 ^ 1,
+ 3BinOpTemp@20 == 0temp@1 ^ 0,
+ 4BinOpTemp@20 == 0temp@1 ^ 1,
+ 5BinOpTemp@20 == 0temp@1 ^ 1,
+ 6BinOpTemp@20 == 0temp@1 ^ 1,
+ 7BinOpTemp@20 == 0temp@1 ^ 0,
+ 8BinOpTemp@20 == 0temp@1 ^ 0,
+ 9BinOpTemp@20 == 0temp@1 ^ 0,
+ 10BinOpTemp@20 == 0temp@1 ^ 1,
+ 11BinOpTemp@20 == 0temp@1 ^ 0,
+ 12BinOpTemp@20 == 0temp@1 ^ 1,
+ 13BinOpTemp@20 == 0temp@1 ^ 1,
+ 14BinOpTemp@20 == 0temp@1 ^ 1,
+ 15BinOpTemp@20 == 0temp@1 ^ 0,
+ 16BinOpTemp@20 == 0temp@1 ^ 0,
+ 17BinOpTemp@20 == 0temp@1 ^ 0,
+ 18BinOpTemp@20 == 0temp@1 ^ 1,
+ 19BinOpTemp@20 == 0temp@1 ^ 0,
+ 20BinOpTemp@20 == 0temp@1 ^ 1,
+ 21BinOpTemp@20 == 0temp@1 ^ 1,
+ 22BinOpTemp@20 == 0temp@1 ^ 1,
+ 23BinOpTemp@20 == 0temp@1 ^ 0,
+ 24BinOpTemp@20 == 0temp@1 ^ 0,
+ 25BinOpTemp@20 == 0temp@1 ^ 0,
+ 26BinOpTemp@20 == 0temp@1 ^ 1,
+ 27BinOpTemp@20 == 0temp@1 ^ 0,
+ 28BinOpTemp@20 == 0temp@1 ^ 1,
+ 29BinOpTemp@20 == 0temp@1 ^ 1,
+ 30BinOpTemp@20 == 0temp@1 ^ 1,
+ 31BinOpTemp@20 == 0temp@1 ^ 0,
+ 32BinOpTemp@20 == 0temp@1 ^ 0,
+ 33BinOpTemp@20 == 0temp@1 ^ 0,
+ 34BinOpTemp@20 == 0temp@1 ^ 1,
+ 35BinOpTemp@20 == 0temp@1 ^ 0,
+ 36BinOpTemp@20 == 0temp@1 ^ 1,
+ 37BinOpTemp@20 == 0temp@1 ^ 1,
+ 38BinOpTemp@20 == 0temp@1 ^ 1,
+ 39BinOpTemp@20 == 0temp@1 ^ 0,
+ 40BinOpTemp@20 == 0temp@1 ^ 0,
+ 41BinOpTemp@20 == 0temp@1 ^ 0,
+ 42BinOpTemp@20 == 0temp@1 ^ 1,
+ 43BinOpTemp@20 == 0temp@1 ^ 0,
+ 44BinOpTemp@20 == 0temp@1 ^ 1,
+ 45BinOpTemp@20 == 0temp@1 ^ 1,
+ 46BinOpTemp@20 == 0temp@1 ^ 1,
+ 47BinOpTemp@20 == 0temp@1 ^ 0,
+ 48BinOpTemp@20 == 0temp@1 ^ 0,
+ 49BinOpTemp@20 == 0temp@1 ^ 0,
+ 50BinOpTemp@20 == 0temp@1 ^ 1,
+ 51BinOpTemp@20 == 0temp@1 ^ 0,
+ 52BinOpTemp@20 == 0temp@1 ^ 1,
+ 53BinOpTemp@20 == 0temp@1 ^ 1,
+ 54BinOpTemp@20 == 0temp@1 ^ 1,
+ 55BinOpTemp@20 == 0temp@1 ^ 0,
+ 56BinOpTemp@20 == 0temp@1 ^ 0,
+ 57BinOpTemp@20 == 0temp@1 ^ 0,
+ 58BinOpTemp@20 == 0temp@1 ^ 1,
+ 59BinOpTemp@20 == 0temp@1 ^ 0,
+ 60BinOpTemp@20 == 0temp@1 ^ 1,
+ 61BinOpTemp@20 == 0temp@1 ^ 1,
+ 62BinOpTemp@20 == 0temp@1 ^ 1,
+ 63BinOpTemp@20 == 0temp@1 ^ 0,
+ 64BinOpTemp@20 == 0temp@1 ^ 0,
+ 1BinOpTemp@21 == 0temp@1 ^ 0,
+ 2BinOpTemp@21 == 0temp@1 ^ 0,
+ 3BinOpTemp@21 == 0temp@1 ^ 1,
+ 4BinOpTemp@21 == 0temp@1 ^ 1,
+ 5BinOpTemp@21 == 0temp@1 ^ 0,
+ 6BinOpTemp@21 == 0temp@1 ^ 1,
+ 7BinOpTemp@21 == 0temp@1 ^ 1,
+ 8BinOpTemp@21 == 0temp@1 ^ 0,
+ 9BinOpTemp@21 == 0temp@1 ^ 0,
+ 10BinOpTemp@21 == 0temp@1 ^ 0,
+ 11BinOpTemp@21 == 0temp@1 ^ 1,
+ 12BinOpTemp@21 == 0temp@1 ^ 1,
+ 13BinOpTemp@21 == 0temp@1 ^ 0,
+ 14BinOpTemp@21 == 0temp@1 ^ 1,
+ 15BinOpTemp@21 == 0temp@1 ^ 1,
+ 16BinOpTemp@21 == 0temp@1 ^ 0,
+ 17BinOpTemp@21 == 0temp@1 ^ 0,
+ 18BinOpTemp@21 == 0temp@1 ^ 0,
+ 19BinOpTemp@21 == 0temp@1 ^ 1,
+ 20BinOpTemp@21 == 0temp@1 ^ 1,
+ 21BinOpTemp@21 == 0temp@1 ^ 0,
+ 22BinOpTemp@21 == 0temp@1 ^ 1,
+ 23BinOpTemp@21 == 0temp@1 ^ 1,
+ 24BinOpTemp@21 == 0temp@1 ^ 0,
+ 25BinOpTemp@21 == 0temp@1 ^ 0,
+ 26BinOpTemp@21 == 0temp@1 ^ 0,
+ 27BinOpTemp@21 == 0temp@1 ^ 1,
+ 28BinOpTemp@21 == 0temp@1 ^ 1,
+ 29BinOpTemp@21 == 0temp@1 ^ 0,
+ 30BinOpTemp@21 == 0temp@1 ^ 1,
+ 31BinOpTemp@21 == 0temp@1 ^ 1,
+ 32BinOpTemp@21 == 0temp@1 ^ 0,
+ 33BinOpTemp@21 == 0temp@1 ^ 0,
+ 34BinOpTemp@21 == 0temp@1 ^ 0,
+ 35BinOpTemp@21 == 0temp@1 ^ 1,
+ 36BinOpTemp@21 == 0temp@1 ^ 1,
+ 37BinOpTemp@21 == 0temp@1 ^ 0,
+ 38BinOpTemp@21 == 0temp@1 ^ 1,
+ 39BinOpTemp@21 == 0temp@1 ^ 1,
+ 40BinOpTemp@21 == 0temp@1 ^ 0,
+ 41BinOpTemp@21 == 0temp@1 ^ 0,
+ 42BinOpTemp@21 == 0temp@1 ^ 0,
+ 43BinOpTemp@21 == 0temp@1 ^ 1,
+ 44BinOpTemp@21 == 0temp@1 ^ 1,
+ 45BinOpTemp@21 == 0temp@1 ^ 0,
+ 46BinOpTemp@21 == 0temp@1 ^ 1,
+ 47BinOpTemp@21 == 0temp@1 ^ 1,
+ 48BinOpTemp@21 == 0temp@1 ^ 0,
+ 49BinOpTemp@21 == 0temp@1 ^ 0,
+ 50BinOpTemp@21 == 0temp@1 ^ 0,
+ 51BinOpTemp@21 == 0temp@1 ^ 1,
+ 52BinOpTemp@21 == 0temp@1 ^ 1,
+ 53BinOpTemp@21 == 0temp@1 ^ 0,
+ 54BinOpTemp@21 == 0temp@1 ^ 1,
+ 55BinOpTemp@21 == 0temp@1 ^ 1,
+ 56BinOpTemp@21 == 0temp@1 ^ 0,
+ 57BinOpTemp@21 == 0temp@1 ^ 0,
+ 58BinOpTemp@21 == 0temp@1 ^ 0,
+ 59BinOpTemp@21 == 0temp@1 ^ 1,
+ 60BinOpTemp@21 == 0temp@1 ^ 1,
+ 61BinOpTemp@21 == 0temp@1 ^ 0,
+ 62BinOpTemp@21 == 0temp@1 ^ 1,
+ 63BinOpTemp@21 == 0temp@1 ^ 1,
+ 64BinOpTemp@21 == 0temp@1 ^ 0,
+ 1BinOpTemp@21 != 0,
+ ...]
+
+In [14]: len(s.solver.assertions())
+Out[14]: 321
+
