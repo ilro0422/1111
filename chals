@@ -1,0 +1,8 @@
+Challenges that should be doable to attempt to get pySym to work with
+-----------------------------------
+
+Boston Key Party 2016 -- HMAC CRC
+https://github.com/ctfs/write-ups-2016/blob/master/boston-key-party-2016/crypto/hamc_crc-5/0c7433675c3c555afb77271d6a549bf5d941d2ab
+
+SECCON Quals 2017 -- Crypto Vigenere
+https://github.com/p4-team/ctf/tree/master/2017-12-09-seccon-quals/crypto_vigenere

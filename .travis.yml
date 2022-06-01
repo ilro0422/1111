@@ -1,0 +1,18 @@
+language: python
+sudo: required
+services:
+    - docker
+python:
+    - 3.6
+before_install:
+    - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+    - sudo apt-get update
+    - sudo apt-get -y install docker-ce
+install:
+    - docker build -t bannsec/pysym .
+script:
+    - docker run -it --rm -e COVERALLS_REPO_TOKEN=$COVERALLS_REPO_TOKEN -e TRAVIS_BRANCH=$TRAVIS_BRANCH bannsec/pysym bash -c '. ~/.virtualenvs/pySym/bin/activate && cd /home/pySym/pySym/ && pytest && if [ ! -z "$COVERALLS_REPO_TOKEN" ]; then coveralls; fi'
+env:
+  global:
+    secure: GkgOfJq14ozjJ0dUtOAduBTyIBIGgI17EGSeJ6ypxYVZhEk5O10lJoY/cPHltJ11RcTAcGZmUYkAgGa+GgmY1csotqBpNOfuojYOCZst27v20khjPxkbRSwpokwoyi4jhv/HtlOVTUW808uZpa+vLs0B8w+atRO87wt7UucB98W1jqiveRrzJaiQsqCvImuZp93d1gocE7/TPLAC5KObNcmkdkFsVhZZGijWO66OvRcXUaiL7oDqY6KhxVP4lk73q4LRnok7/XBmIVhRrHhPzxigxGf+KB9nFv5iV76xRJ4gDlvPrPk5y7mkPnuUKp4FsoLWJHF/PtXOpwkqpAUVBWl3swDiIfMOMalqbHTyOW+hWlN7h8Bz9CCBXxZlDjT8O4NJKoldsVNb93vhkjWPBtR31GPnZ5uIS0MHVz/V/bp+gZghpFXOPkOF6xnL6pmuv0fY5MkNPtyTLy41hiJQlLmsNomzRMfnkGqNDlkefStr32f9ttxx9AOjk0arMX7ryAdZgPSSony+lgjb6wXhRYyxNCZL8RdKD+y4JE/e+uyMJPnlBicwSXN6/38qRGV8rvSu0UeJ7OaIbe7Ogq0Liy5gKlUY2LRX2N8nqnCeepqjidyHqTianpPN+nJJkqIrfZKtbC/IpaOontan6+403OhrkOFJN3CNenjT3IVpycY=
